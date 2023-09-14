@@ -44,4 +44,49 @@ export class BoardService {
       content: 'hello world',
     },
   ];
+
+  findAllBoards() {
+    return this.boards;
+  }
+
+  findOneBoard(id: number) {
+    const index = this.getSameBoardIndex(id);
+    return this.boards[index];
+  }
+
+  createBoard(board) {
+    const newBoard = { id: this.autoCreateNextBoardId(), ...board };
+    this.boards.push(newBoard);
+    return newBoard;
+  }
+
+  autoCreateNextBoardId() {
+    return this.boards.sort((a, b) => b.id - a.id)[0].id + 1;
+  }
+
+  updateBoard(id: number, board) {
+    const index = this.getSameBoardIndex(id);
+    if (index > -1) {
+      this.boards[index] = { ...this.boards[index], ...board };
+      return this.boards[index];
+    }
+
+    return null;
+  }
+
+  getSameBoardIndex(id: number) {
+    return this.boards.findIndex((board) => board.id === id);
+  }
+
+  deleteBoard(id: number) {
+    const index = this.getSameBoardIndex(id);
+
+    if (index > -1) {
+      const deletedBoard = this.boards[index];
+      this.boards.splice(index, 1);
+      return deletedBoard;
+    }
+
+    return null;
+  }
 }
